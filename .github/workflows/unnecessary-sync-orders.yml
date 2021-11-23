@@ -15,7 +15,7 @@ on:
       skip_completed_orders:
         description: Skip completed or canceled orders?
         required: false
-        default: "true"
+        default: "false"
 
   repository_dispatch:
     types:
