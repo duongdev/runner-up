@@ -71,7 +71,7 @@ jobs:
       - name: Repository Dispatch
         uses: peter-evans/repository-dispatch@v1
         # if: env.AUTO_RE_TRIGGER == 'true'
-        if: always()
+        if: ${{ !failure() || env.AUTO_RE_TRIGGER == 'true' }}
         with:
           token: ${{ secrets.DUONGDEV_GH_TOKEN }}
           event-type: auto_re_trigger
