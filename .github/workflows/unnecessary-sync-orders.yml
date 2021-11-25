@@ -1,4 +1,4 @@
-name: Unnecessary | Sync sapo orders
+name: UnnecessarySLM | Sync sapo orders
 on:
   workflow_dispatch:
     inputs:
@@ -15,7 +15,7 @@ on:
       skip_completed_orders:
         description: Skip completed or canceled orders?
         required: false
-        default: "true"
+        default: "false"
 
   repository_dispatch:
     types:
@@ -40,7 +40,7 @@ jobs:
     env:
       REPO_REF: ${{ github.event.inputs.repo_ref || 'main' }}
       AUTO_RE_TRIGGER: ${{ github.event.inputs.auto_re_trigger || 'true' }}
-      SKIP_COMPLETED_ORDERS: ${{ github.event.inputs.skip_completed_orders || 'true' }}
+      SKIP_COMPLETED_ORDERS: ${{ github.event.inputs.skip_completed_orders || 'false' }}
 
     steps:
       - uses: actions/checkout@v2
@@ -80,8 +80,8 @@ jobs:
 
       - name: Repository Dispatch
         uses: peter-evans/repository-dispatch@v1
-        if: env.AUTO_RE_TRIGGER == 'true'
+        if: env.AUTO_RE_TRIGGER == 'true' || failure()
         with:
           token: ${{ secrets.DUONGDEV_GH_TOKEN }}
           event-type: auto_re_trigger
-          client-payload: '{"repo_ref": "${{ github.event.inputs.repo_ref }}", "auto_re_trigger": "${{ github.event.inputs.auto_re_trigger }}"}'
+          client-payload: '{"repo_ref": "${{ github.event.inputs.repo_ref }}", "auto_re_trigger": "${{ github.event.inputs.auto_re_trigger }}", "skip_completed_orders": "${{ github.event.inputs.skip_completed_orders }}"}'
