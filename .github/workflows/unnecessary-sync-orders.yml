@@ -15,17 +15,27 @@ on:
       skip_completed_orders:
         description: Skip completed or canceled orders?
         required: false
-        default: "false"
+        default: "true"
 
   repository_dispatch:
     types:
       - webhook
       - auto_re_trigger
 
+  schedule:
+    - cron: "0 */2 * * *"
+
 jobs:
+  cleanup-runs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: rokroskar/workflow-run-cleanup-action@master
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
   sync-orders:
     name: Sync orders
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     timeout-minutes: 360
     env:
       REPO_REF: ${{ github.event.inputs.repo_ref || 'main' }}
@@ -70,8 +80,7 @@ jobs:
 
       - name: Repository Dispatch
         uses: peter-evans/repository-dispatch@v1
-        # if: env.AUTO_RE_TRIGGER == 'true'
-        if: ${{ !failure() || env.AUTO_RE_TRIGGER == 'true' }}
+        if: env.AUTO_RE_TRIGGER == 'true'
         with:
           token: ${{ secrets.DUONGDEV_GH_TOKEN }}
           event-type: auto_re_trigger
