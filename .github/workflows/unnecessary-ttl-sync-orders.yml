@@ -1,4 +1,4 @@
-name: UnnecessarySLM | Sync sapo orders
+name: UnnecessaryTTL | Sync sapo orders
 on:
   workflow_dispatch:
     inputs:
@@ -20,7 +20,7 @@ on:
   repository_dispatch:
     types:
       - webhook
-      - auto_re_trigger
+      - auto_re_trigger_ttl
 
   schedule:
     - cron: "0 */2 * * *"
@@ -75,7 +75,7 @@ jobs:
         run: yarn install --production=false
 
       - name: Run
-        run: yarn start:sapo
+        run: WS=ttl yarn start:sapo
 
       # - name: Sleep for 5 minutes
       #   uses: jakejarvis/wait-action@master
@@ -88,5 +88,5 @@ jobs:
         if: env.AUTO_RE_TRIGGER == 'true' || failure()
         with:
           token: ${{ secrets.DUONGDEV_GH_TOKEN }}
-          event-type: auto_re_trigger
+          event-type: auto_re_trigger_ttl
           client-payload: '{"repo_ref": "${{ github.event.inputs.repo_ref }}", "auto_re_trigger": "${{ github.event.inputs.auto_re_trigger }}", "skip_completed_orders": "${{ github.event.inputs.skip_completed_orders }}"}'
