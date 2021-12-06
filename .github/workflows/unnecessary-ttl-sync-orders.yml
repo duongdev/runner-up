@@ -32,10 +32,18 @@ jobs:
       - uses: rokroskar/workflow-run-cleanup-action@master
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+      - name: Sleep for 5 secs
+        uses: jakejarvis/wait-action@master
+        if: env.AUTO_RE_TRIGGER == 'true'
+        with:
+          time: "5s"
+      - uses: rokroskar/workflow-run-cleanup-action@master
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
   sync-orders:
     name: Sync orders
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     timeout-minutes: 360
     env:
       REPO_REF: ${{ github.event.inputs.repo_ref || 'main' }}
