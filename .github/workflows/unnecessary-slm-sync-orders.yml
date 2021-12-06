@@ -83,17 +83,12 @@ jobs:
         run: yarn install --production=false
 
       - name: Run
+        continue-on-error: true
         run: WS=slm yarn start:sapo
-
-      # - name: Sleep for 5 minutes
-      #   uses: jakejarvis/wait-action@master
-      #   if: env.AUTO_RE_TRIGGER == 'true'
-      #   with:
-      #     time: "5m"
 
       - name: Repository Dispatch
         uses: peter-evans/repository-dispatch@v1
-        if: env.AUTO_RE_TRIGGER == 'true' || failure()
+        if: env.AUTO_RE_TRIGGER == 'true'
         with:
           token: ${{ secrets.DUONGDEV_GH_TOKEN }}
           event-type: auto_re_trigger_slm
