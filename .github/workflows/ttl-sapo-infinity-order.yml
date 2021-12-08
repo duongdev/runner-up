@@ -84,7 +84,7 @@ jobs:
 
       - name: Run
         continue-on-error: true
-        run: WS=ttl yarn start:sapo
+        run: yarn start:ttl:sync-orders
 
       - name: Repository Dispatch
         uses: peter-evans/repository-dispatch@v1

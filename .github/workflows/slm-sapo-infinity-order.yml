@@ -84,7 +84,7 @@ jobs:
 
       - name: Run
         continue-on-error: true
-        run: WS=slm yarn start:sapo
+        run: yarn start:slm:sync-orders
 
       - name: Repository Dispatch
         uses: peter-evans/repository-dispatch@v1
