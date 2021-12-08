@@ -1,4 +1,4 @@
-name: UnnecessaryTTL | Sync sapo orders
+name: SLM_Sapo_Inf_Order
 on:
   workflow_dispatch:
     inputs:
@@ -20,7 +20,7 @@ on:
   repository_dispatch:
     types:
       - webhook
-      - auto_re_trigger_ttl
+      - SLM_SAPO_INF_ORDER
 
   schedule:
     - cron: "0 */2 * * *"
@@ -84,12 +84,12 @@ jobs:
 
       - name: Run
         continue-on-error: true
-        run: WS=ttl yarn start:sapo
+        run: WS=slm yarn start:sapo
 
       - name: Repository Dispatch
         uses: peter-evans/repository-dispatch@v1
         if: env.AUTO_RE_TRIGGER == 'true'
         with:
           token: ${{ secrets.DUONGDEV_GH_TOKEN }}
-          event-type: auto_re_trigger_ttl
+          event-type: SLM_SAPO_INF_ORDER
           client-payload: '{"repo_ref": "${{ github.event.inputs.repo_ref }}", "auto_re_trigger": "${{ github.event.inputs.auto_re_trigger }}", "skip_completed_orders": "${{ github.event.inputs.skip_completed_orders }}"}'
