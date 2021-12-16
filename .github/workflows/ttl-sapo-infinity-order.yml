@@ -23,7 +23,7 @@ on:
       - TTL_Sapo_Inf_Order
 
   schedule:
-    - cron: "0 */2 * * *"
+    - cron: "0 */4 * * *"
 
 jobs:
   cleanup-runs:

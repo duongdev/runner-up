@@ -23,7 +23,7 @@ on:
       - SLM_SAPO_INF_ORDER
 
   schedule:
-    - cron: "0 */2 * * *"
+    - cron: "0 */4 * * *"
 
 jobs:
   cleanup-runs:
