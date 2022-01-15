@@ -58,7 +58,7 @@ jobs:
           timezoneWindows: "Singapore Standard Time"
       - uses: actions/checkout@v2
         with:
-          repository: "withDustin/unnecessary-data-hub"
+          repository: "withDustin/alien-bot"
           token: ${{ secrets.DUONGDEV_GH_TOKEN }}
           ref: ${{ env.REPO_REF }}
 
