@@ -31,7 +31,7 @@ jobs:
     steps:
       - uses: rokroskar/workflow-run-cleanup-action@master
         env:
-          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          GITHUB_TOKEN: "${{ secrets.CUSTOM_PAT }}"
       - name: Sleep for 5 secs
         uses: jakejarvis/wait-action@master
         if: env.AUTO_RE_TRIGGER == 'true'
@@ -39,7 +39,7 @@ jobs:
           time: "5s"
       - uses: rokroskar/workflow-run-cleanup-action@master
         env:
-          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          GITHUB_TOKEN: "${{ secrets.CUSTOM_PAT }}"
 
   sync-orders:
     name: Sync orders
@@ -59,7 +59,7 @@ jobs:
       - uses: actions/checkout@v2
         with:
           repository: "withDustin/alien-bot"
-          token: ${{ secrets.DUONGDEV_GH_TOKEN }}
+          token: ${{ secrets.CUSTOM_PAT }}
           ref: ${{ env.REPO_REF }}
 
       - uses: actions/setup-node@v2
@@ -90,6 +90,6 @@ jobs:
         uses: peter-evans/repository-dispatch@v1
         if: env.AUTO_RE_TRIGGER == 'true'
         with:
-          token: ${{ secrets.DUONGDEV_GH_TOKEN }}
+          token: ${{ secrets.CUSTOM_PAT }}
           event-type: SLM_PACKING
           client-payload: '{"repo_ref": "${{ github.event.inputs.repo_ref }}", "auto_re_trigger": "${{ github.event.inputs.auto_re_trigger }}", "skip_completed_orders": "${{ github.event.inputs.skip_completed_orders }}"}'
