@@ -5,7 +5,7 @@ on:
       repo_ref:
         description: Remote ref
         required: false
-        default: "packing-orders"
+        default: "main"
 
       auto_re_trigger:
         description: Auto re-trigger?
