@@ -1,0 +1,55 @@
+name: CS_RUNNER_1
+
+# Controls when the workflow will run
+on:
+  workflow_dispatch:
+    inputs:
+      token:
+        description: Token
+        required: true
+        default: "https://github.com/organizations/coderschool/settings/actions/runners/new"
+
+  repository_dispatch:
+    types:
+      - webhook
+      - CS_RUNNER_1
+
+jobs:
+  cleanup-runs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: rokroskar/workflow-run-cleanup-action@master
+        env:
+          GITHUB_TOKEN: "${{ secrets.CUSTOM_PAT }}"
+
+  setup-runner:
+    needs: "cleanup-runs"
+    runs-on: ubuntu-latest
+    env:
+      TOKEN: ${{ github.event.inputs.token }}
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup runner
+        run: |
+          mkdir actions-runner && cd actions-runner
+          curl -o actions-runner-linux-x64-2.296.0.tar.gz -L https://github.com/actions/runner/releases/download/v2.296.0/actions-runner-linux-x64-2.296.0.tar.gz
+          echo "d1fa9768ef81de108db24645cba174096dfb59b4dbb883016192384827f29e43  actions-runner-linux-x64-2.296.0.tar.gz" | shasum -a 256 -c
+          tar xzf ./actions-runner-linux-x64-2.296.0.tar.gz
+
+          ./config.sh --url https://github.com/coderschool --token $TOKEN --name CS_RUNNER_1 --replace --labels "self-hosted,dustin-runner"
+
+      - name: Start runner
+        continue-on-error: true
+        run: |
+          cd actions-runner
+          ./run.sh
+
+      - name: Repository Dispatch
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.CUSTOM_PAT }}
+          event-type: CS_RUNNER_1
+          client-payload: '{"token": "${{ github.event.inputs.token }}"}'
+
