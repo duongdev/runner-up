@@ -26,7 +26,7 @@ jobs:
     needs: "cleanup-runs"
     runs-on: ubuntu-latest
     env:
-      TOKEN: ${{ github.event.inputs.token }}
+      TOKEN: ${{ github.event.inputs.token || github.event.client_payload.token }}
 
     steps:
       - uses: actions/checkout@v3
